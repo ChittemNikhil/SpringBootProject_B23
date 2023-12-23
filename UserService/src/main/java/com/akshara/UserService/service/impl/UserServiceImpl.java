@@ -3,9 +3,14 @@ package com.akshara.UserService.service.impl;
 import com.akshara.UserService.entities.User;
 import com.akshara.UserService.repositories.UserRepository;
 import com.akshara.UserService.service.UserService;
+import org.hibernate.annotations.Array;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +19,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public User createOrUpdateUser(User user) {
@@ -30,8 +40,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String userId) {
-        return userRepository.findById(userId).orElse(null);
-
+        User fetchedUser = userRepository.findById(userId).orElse(null);
+        ArrayList userRatings = restTemplate.getForObject("http://localhost:8080/ratings/users/"+userId , ArrayList.class);
+        logger.info("user ratings are {}, fetched user is {} ", userRatings, fetchedUser );
+        fetchedUser.setRating(userRatings);
+        return fetchedUser;
     }
 
     @Override

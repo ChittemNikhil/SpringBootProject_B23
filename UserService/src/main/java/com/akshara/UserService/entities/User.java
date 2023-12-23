@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -28,5 +31,10 @@ public class User {
     private String email;
     @Column(name="mobile")
     private int mobile;
+
+    @Transient
+    private List<Rating> rating;
+
+
 
 }
