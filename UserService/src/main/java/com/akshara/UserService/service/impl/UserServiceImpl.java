@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String userId) {
         User fetchedUser = userRepository.findById(userId).orElse(null);
-        ArrayList userRatings = restTemplate.getForObject("http://localhost:8080/ratings/users/"+userId , ArrayList.class);
+        ArrayList userRatings = restTemplate.getForObject("http://RATING-SERVICE/ratings/users/"+userId , ArrayList.class);
         logger.info("user ratings are {}, fetched user is {} ", userRatings, fetchedUser );
         fetchedUser.setRating(userRatings);
         return fetchedUser;
